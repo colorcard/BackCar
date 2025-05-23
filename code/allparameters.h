@@ -1,27 +1,6 @@
 #ifndef CODE_ALLPARAMETERS_H_
 #define CODE_ALLPARAMETERS_H_
 
-//pid控制器结构体
-typedef struct{
-        float Kp;
-        float Ki;
-        float Kd;
-        //误差
-        float current_error;
-        float last_error;
-        float before_last_error;
-        //积分限幅及其限幅
-        float integrate_val;
-        float integrate_max;
-        float integrate_min;
-        //积分死区
-        float filter_value;
-        //位置pid累加变量
-        float output_value;
-        //输出限幅
-        float output_max;
-        float output_min;
-}PID;
 
 typedef struct{
         uint8 parking_flag;                     //开启倒车标志位
@@ -35,6 +14,6 @@ typedef struct{
 
 
 
-#endif /* CODE_IMAGE_H_ */
+#endif /* CODE_ALLPARAMETERS_H_ */
 
 
