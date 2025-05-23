@@ -199,13 +199,13 @@ void Encoder_Debug_Display(void)
 //================== 兼容性函数 ==================
 /*==========================兼容原有接口==========================*/
 /* 以下函数保持与原代码的兼容性 */
-void encoder_filter(void)
-{
-    Encoder_Read_Speed();
-    Encoder_Filter_Update();
-}
-
-void encoder_init(void)
-{
-    Encoder_Init();
-}
+//void encoder_filter(void)
+//{
+//    Encoder_Read_Speed();
+//    Encoder_Filter_Update();
+//}
+//
+//void encoder_init(void)
+//{
+//    Encoder_Init();
+//}

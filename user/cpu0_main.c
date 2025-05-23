@@ -22,13 +22,14 @@ uint8 processed_image[MT9V03X_H][MT9V03X_W];         // 大津法处理后的图
 
 // 系统状态变量
 uint64 system_millis = 0;                            // 系统运行时间(ms)
+uint64 millis = 0; // 定时器计数器
 //float distance_to_line = 0.0f;                       // 图像与赛道的距离
 float current_steering_angle = 0.0f;                 // 当前舵机输出角度
 //float distance_to_side = 0.0f;                       // 侧向距离
-float angle_by_image = 0.0f;                         // 图像计算得到的角度
+//float angle_by_image = 0.0f;                         // 图像计算得到的角度
 
 // 停车系统
-Parking_struct parking_system;                       // 停车控制结构体
+Parking_struct parking;                       // 停车控制结构体
 
 // 外部变量声明 - 陀螺仪角度
 extern float X_now_angle_to_path;                    // 陀螺仪角度（pitch）
@@ -144,10 +145,10 @@ IFX_INTERRUPT(cc60_pit_ch0_isr, 1, CCU6_0_CH0_ISR_PRIORITY)
  */
 static void Parking_System_Init(void)
 {
-    parking_system.car_length = 3120;                // 车长对应的编码器脉冲数
-    parking_system.parking_flag = 0;                 // 停车标志位
-    parking_system.parking_station = 0;              // 停车阶段标志位
-    parking_system.monitor_parking_opportunity = 0;   // 检测停车时机标志位
+    parking.car_length = 3120;                // 车长对应的编码器脉冲数
+    parking.parking_flag = 0;                 // 停车标志位
+    parking.parking_station = 0;              // 停车阶段标志位
+    parking.monitor_parking_opportunity = 0;   // 检测停车时机标志位
 }
 
 //================== 图像处理函数 ==================

@@ -47,9 +47,9 @@ float Encoder_Speed_To_MMS(int16 encoder_count);
 void Encoder_Debug_Display(void);
 
 // 兼容原有接口
-#define encoder_filter()          Encoder_Read_Speed()
-#define encoder_init()            Encoder_Init()
-#define Encoder_speed_l           encoder_speed_left
-#define Encoder_speed_r           encoder_speed_right
+//#define encoder_filter()          Encoder_Read_Speed()
+//#define encoder_init()            Encoder_Init()
+//#define Encoder_speed_l           encoder_speed_left
+//#define Encoder_speed_r           encoder_speed_right
 
 #endif /* CODE_ENCODER_H_ */
