@@ -5,7 +5,7 @@
 extern float distance_to_side;
 extern float angle_by_image;
 
-uint8 road_boundary[Right_boundary-Left_boundary] = {0};//赛道边界
+uint8 road_boundary[RIGHT_BOUNDARY-LEFT_BOUNDARY] = {0};//赛道边界
 uint8 threshold_value;       //储存阈值信息
 
 
@@ -63,7 +63,7 @@ void OtsuThreshold(uint8_t img_in[MT9V03X_H][MT9V03X_W], uint8_t img_out[MT9V03X
 
     // Step 5: 应用阈值进行二值化并画辅助线
     for (int y = 0; y < MT9V03X_H-30; y++) {//剪除赛道外部分，节省算力
-        for (int x = Left_boundary; x < Right_boundary; x++) {
+        for (int x = LEFT_BOUNDARY; x < RIGHT_BOUNDARY; x++) {
             img_out[y][x] = (img_in[y][x] > best_threshold) ? 255 : 0;
 
         }
@@ -79,10 +79,10 @@ LineFitResult calculate_angle_and_intercept(uint8_t img_in[MT9V03X_H][MT9V03X_W]
     memset(road_boundary, 0, sizeof(road_boundary));
 
     // 1. 提取边界点（避免越界）
-    for (int i = Left_boundary + 1; i < Right_boundary; i++) {
+    for (int i = LEFT_BOUNDARY + 1; i < RIGHT_BOUNDARY; i++) {
         for (int j = 0; j < IMAGE_HIGH - 2; j++) {
             if (img_in[j][i] != 0 && img_in[j+1][i] == 0 && img_in[j+2][i] == 0) {
-                road_boundary[i - Left_boundary - 1] = (uint8_t)j;
+                road_boundary[i - LEFT_BOUNDARY - 1] = (uint8_t)j;
                 break;
             }
         }
@@ -90,7 +90,7 @@ LineFitResult calculate_angle_and_intercept(uint8_t img_in[MT9V03X_H][MT9V03X_W]
 
     // 2. 线性拟合计算斜率和截距
     float sum_x = 0.0f, sum_y = 0.0f, sum_xy = 0.0f, sum_xx = 0.0f;
-    uint16_t num_points = Right_boundary - Left_boundary;
+    uint16_t num_points = RIGHT_BOUNDARY - LEFT_BOUNDARY;
 
     for (uint16_t i = 0; i < num_points; i++) {
         sum_x += i;
@@ -117,8 +117,8 @@ LineFitResult calculate_angle_and_intercept(uint8_t img_in[MT9V03X_H][MT9V03X_W]
     float right_pont_distance = 0;
     float left_pont_distance = 0;
 
-    left_pont_distance = result.slope*(float)Left_boundary+result.intercept;
-    right_pont_distance = result.slope*(float)Right_boundary+result.intercept;
+    left_pont_distance = result.slope*(float)LEFT_BOUNDARY+result.intercept;
+    right_pont_distance = result.slope*(float)RIGHT_BOUNDARY+result.intercept;
     result.level_distance = (left_pont_distance+right_pont_distance)/2;
 
     //工程问题，前期先将信息储存在全局变量中
@@ -173,13 +173,11 @@ void parking_struct_init(void){
 }
 
 //扫描突变点个数
-uint8 parking_condition_scan(uint8_t img_in[MT9V03X_H][MT9V03X_W],uint8 start_line,uint8 range){
+uint8 parking_condition_scan(   uint8_t img_in[MT9V03X_H][MT9V03X_W],  uint8 start_line,    uint8 range ){
     uint8 number = 0;
-    for(int i = Left_boundary+1;i<Right_boundary-2;i++){
-        for(int j = start_line; j<start_line+range;i++){
-            if(img_in[j][i+1]!=img_in[j][i]
-                   &&img_in[j][i] == img_in[j][i-1]
-                   &&img_in[j][i+1]==img_in[j][i+2]){
+    for(int i = LEFT_BOUNDARY+1; i < RIGHT_BOUNDARY -2 ; i++){
+        for(int j = start_line; j < start_line + range; j++){
+            if(img_in[j][i+1]!=img_in[j][i] &&  img_in[j][i] == img_in[j][i-1]  &&  img_in[j][i+1]==img_in[j][i+2]){
                 number++;
             }
 
@@ -190,11 +188,11 @@ uint8 parking_condition_scan(uint8_t img_in[MT9V03X_H][MT9V03X_W],uint8 start_li
 
 //葡萄串法扫描获取车库状态信息
 uint8 grape_seed[5] = {
-        Left_boundary+5,
-        (uint8)((Left_boundary+Right_boundary)*0.25),
-        (uint8)((Left_boundary+Right_boundary)*0.5),
-        (uint8)((Left_boundary+Right_boundary)*0.75),
-        Right_boundary-5
+        LEFT_BOUNDARY+5,
+        (uint8)((LEFT_BOUNDARY+RIGHT_BOUNDARY)*0.25),
+        (uint8)((LEFT_BOUNDARY+RIGHT_BOUNDARY)*0.5),
+        (uint8)((LEFT_BOUNDARY+RIGHT_BOUNDARY)*0.75),
+        RIGHT_BOUNDARY-5
 };
 
 uint8 grape_broom_monitor_parking(uint8_t img_in[MT9V03X_H][MT9V03X_W],uint8 start_line,uint8 range){
@@ -205,8 +203,8 @@ uint8 grape_broom_monitor_parking(uint8_t img_in[MT9V03X_H][MT9V03X_W],uint8 sta
     for(int i = 0;i<5;i++){
         ips200_draw_line(grape_seed[i],0,grape_seed[i],MT9V03X_H,RGB565_RED);
     }
-    ips200_draw_line(Left_boundary,start_line,Right_boundary,start_line,RGB565_RED);
-    ips200_draw_line(Left_boundary,start_line+range,Right_boundary,start_line+range,RGB565_RED);
+    ips200_draw_line(LEFT_BOUNDARY,start_line,RIGHT_BOUNDARY,start_line,RGB565_RED);
+    ips200_draw_line(LEFT_BOUNDARY,start_line+range,RIGHT_BOUNDARY,start_line+range,RGB565_RED);
 
     //如果扫描范围超出图像高度，则返回255，表示错误
     if(start_line+range>MT9V03X_H)return 255;
@@ -223,7 +221,7 @@ uint8 grape_broom_monitor_parking(uint8_t img_in[MT9V03X_H][MT9V03X_W],uint8 sta
         // 从左到右扫描
         uint8 in_region = 0; // 是否在连通区域内
         uint8 connected_seeds = 0; // 当前连通区域包含的种子点数量
-        for(int k = Left_boundary; k < Right_boundary; k++){
+        for(int k = LEFT_BOUNDARY; k < RIGHT_BOUNDARY; k++){
             if(img_in[k][i] != 0){ // 如果是有效像素
                 if(!in_region){
                     in_region = 1;

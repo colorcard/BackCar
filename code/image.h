@@ -7,9 +7,10 @@
 //定义图像信息
 #define IMAGE_WID      188
 #define IMAGE_HIGH     120
+
 //裁剪左右边图像，排除边缘黑圈干扰
-#define Left_boundary  20
-#define Right_boundary 168
+#define LEFT_BOUNDARY  20
+#define RIGHT_BOUNDARY 168
 
 //赛道边界状态结构体
 typedef struct {
@@ -21,12 +22,10 @@ typedef struct {
 
 extern Parking_struct parking;
 
-//uint8 road_boundary[Right_boundary-Left_boundary] = {0};
 
 #define white_pixel 255    //图像黑
 #define black_pixel 0      //图像白
 
-//uint8 threshold_value;       //储存阈值信息
 
 void OtsuThreshold(uint8_t img_in[MT9V03X_H][MT9V03X_W], uint8_t img_out[MT9V03X_H][MT9V03X_W]);
 //当前角度获取
