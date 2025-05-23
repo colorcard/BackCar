@@ -1,10 +1,16 @@
 #include "image.h"
+
+
+
 extern float distance_to_side;
 extern float angle_by_image;
 
-uint8 road_boundary[Right_boundary-Left_boundary] = {0};
+uint8 road_boundary[Right_boundary-Left_boundary] = {0};//赛道边界
 uint8 threshold_value;       //储存阈值信息
-/*=======================================进行图像大津法========================================================*/
+
+
+
+/*==============================进行图像大津法===============================*/
 void OtsuThreshold(uint8_t img_in[MT9V03X_H][MT9V03X_W], uint8_t img_out[MT9V03X_H][MT9V03X_W]){
     int histogram[256] = {0};  // 灰度直方图
     float prob[256] = {0};     // 每个灰度级的概率
@@ -65,102 +71,9 @@ void OtsuThreshold(uint8_t img_in[MT9V03X_H][MT9V03X_W], uint8_t img_out[MT9V03X
     }
 }
 
-//获取车道右边界线斜率
-///*  <--------------------
-// * (-1, 1) (0, 1) ( 1, 1)^
-// * (-1, 0) (0, 0) ( 1, 0)|
-// * (-1,-1) (0,-1) ( 1,-1)|
-// * 起点----------------->
-// */
-//逆时针方向
-//const int dx[8] = {-1,0,1,1,1,0,-1,-1};
-//const int dy[8] = {-1,-1,-1,0,1,1,1,0};
-// 八邻域方向（顺时针顺序：右、右下、下、左下、左、左上、上、右上）
-const int dx[8] = {1, 1, 0, -1, -1, -1, 0, 1};
-const int dy[8] = {0, 1, 1, 1, 0, -1, -1, -1};
-
-/**
- * @brief 从起点 (x, y) 开始，沿八邻域爬取边界线
- * @param start_x 起始 X 坐标（必须 >= Left_boundary）
- * @param start_y 起始 Y 坐标（通常从底部开始）
- */
-
-void trace_boundary(int start_x, int start_y,uint8_t img_in[MT9V03X_H][MT9V03X_W]) {
-    int x = start_x;
-    int y = start_y;
-    int dir = 0; // 初始方向：向右
-
-    // 确保起点在图像范围内
-    if (x < Left_boundary || x >= Right_boundary || y < 0 || y >= IMAGE_HIGH) {
-        return;
-    }
-
-    // 清空 road_boundary
-    for (int i = 0; i < Right_boundary - Left_boundary; i++) {
-        road_boundary[i] = 0;
-    }
-
-    // 开始爬线
-    while (x >= Left_boundary && x < Right_boundary && y >= 0 && y < IMAGE_HIGH) {
-        // 存储当前点的 Y 坐标（原点在左下角，Y 向下增长）
-        road_boundary[x - Left_boundary] = (uint8_t)y;
 
 
-        ips200_draw_point(x - Left_boundary,(uint8_t)y,RGB565_PURPLE);
-
-
-        // 检查八邻域，寻找下一个边界点
-        bool found = false;
-        for (int i = 0; i < 8; i++) {
-            int new_dir = (dir + i) % 8; // 从当前方向开始搜索
-            int nx = x + dx[new_dir];
-            int ny = y + dy[new_dir];
-
-            // 检查是否在图像范围内且是边界点（255）
-            if (nx >= Left_boundary
-                    && nx < Right_boundary
-                    && ny >= 0
-                    && ny < IMAGE_HIGH
-                    && img_in[ny][nx] == 255) {
-                x = nx;
-                y = ny;
-                dir = (new_dir + 4) % 8; // 反方向 + 2（优化搜索方向）
-                found = true;
-                break;
-            }
-        }
-
-        // 如果没有找到下一个点，终止爬线
-        if (!found) {
-            break;
-        }
-    }
-}
-//方案0，八邻域爬线算角度
-float calculate_angle(uint8_t img_in[MT9V03X_H][MT9V03X_W]){
-    //寻找八邻域爬线起点
-    uint8 start_x = -1;
-    uint8 start_y = 0;
-    float temp_angle = 0.0;
-    for(uint8 i = IMAGE_HIGH;i>2;i--){
-        if( img_in[Left_boundary+1][i]!=0
-                &&img_in[Left_boundary+1][i-1]==0
-                &&img_in[Left_boundary+1][i-2]==0
-                &&img_in[Left_boundary+1][i-3]==0){
-            start_x = Left_boundary;
-            start_y = i;
-        }
-    }
-    trace_boundary(start_x,start_y,img_in);
-    for(uint8 i = 0;i<7;i++){
-        temp_angle+=(road_boundary[i]-road_boundary[Right_boundary-Left_boundary-i])/(Right_boundary-Left_boundary-1);
-    }
-    temp_angle/=7;
-    ips200_show_float(0*16,MT9V03X_H+16*1,temp_angle,3,2);
-    return temp_angle;
-}
-
-//获取斜率和截距
+/*======================线性拟合计算斜率和截距=======================*/
 LineFitResult calculate_angle_and_intercept(uint8_t img_in[MT9V03X_H][MT9V03X_W]) {
     LineFitResult result = {0.0f, 0.0f, 0.0f, 0.0f};
     memset(road_boundary, 0, sizeof(road_boundary));
@@ -225,19 +138,20 @@ LineFitResult calculate_angle_and_intercept(uint8_t img_in[MT9V03X_H][MT9V03X_W]
     return result;
 }
 
+
 float get_distance(uint8_t img_in[MT9V03X_H][MT9V03X_W]){
     float temp = 0;
     temp = calculate_angle_and_intercept(img_in).level_distance;
 
     return temp;
-}
+}//获取当前距离
 
 float get_image_angle(uint8_t img_in[MT9V03X_H][MT9V03X_W]){
     float temp = 0;
     temp = calculate_angle_and_intercept(img_in).angle;
 
     return temp;
-}
+}//获取当前角度
 
 
 //倒车入库时机识别函数
@@ -252,10 +166,10 @@ float get_image_angle(uint8_t img_in[MT9V03X_H][MT9V03X_W]){
 //初始化车库结构体
 void parking_struct_init(void){
     parking.car_length = 3120;    //3120次编码器脉冲
-       parking.parking_flag = 0;
-       parking.parking_station = 0;
-       parking.monitor_parking_opportunity = 0;
-       parking.parking_station = 0;
+    parking.parking_flag = 0;
+    parking.parking_station = 0;
+    parking.monitor_parking_opportunity = 0;
+    parking.parking_station = 0;
 }
 
 //扫描突变点个数
@@ -275,10 +189,14 @@ uint8 parking_condition_scan(uint8_t img_in[MT9V03X_H][MT9V03X_W],uint8 start_li
 }
 
 //葡萄串法扫描获取车库状态信息
-uint8 grape_seed[5] = {Left_boundary+5,(uint8)((Left_boundary+Right_boundary)*0.25)
-        ,(uint8)((Left_boundary+Right_boundary)*0.5)
-                ,(uint8)((Left_boundary+Right_boundary)*0.75),
-                Right_boundary-5};
+uint8 grape_seed[5] = {
+        Left_boundary+5,
+        (uint8)((Left_boundary+Right_boundary)*0.25),
+        (uint8)((Left_boundary+Right_boundary)*0.5),
+        (uint8)((Left_boundary+Right_boundary)*0.75),
+        Right_boundary-5
+};
+
 uint8 grape_broom_monitor_parking(uint8_t img_in[MT9V03X_H][MT9V03X_W],uint8 start_line,uint8 range){
     uint8 max_connect_number = 0;
     uint8 connect_number[5] = {0};

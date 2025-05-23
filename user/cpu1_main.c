@@ -109,6 +109,7 @@ void core1_main(void)
         mpu6050_get_acc();
         mpu6050_get_gyro();
         system_delay_ms(10);
+
         if(millis - mpu6050.preMillis >= mpu6050.MPU6050dt) {
               mpu6050.preMillis = millis;
               dataGetAndFilter();
@@ -131,16 +132,6 @@ void core1_main(void)
 
 //MPU6050ªÒ»°Œ»Ã¨ŒÛ≤Ó
 void dataGetERROR(void) {
-
-//    float temp_error = 0;
-//    for(uint8_t i = 0; i < 200; ++i) {
-//        getMPU6050Data();
-//
-//        temp_error += msg.A[2];
-//
-//        system_delay_ms(10);
-//    }
-//    temp_error/= 100.0f;
     for(uint8_t i = 0; i < 50; ++i) {
         getMPU6050Data();
         mpu6050.MPU6050ERROE[0] += msg.A[0];

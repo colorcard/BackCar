@@ -31,6 +31,7 @@ extern Parking_struct parking;
 void OtsuThreshold(uint8_t img_in[MT9V03X_H][MT9V03X_W], uint8_t img_out[MT9V03X_H][MT9V03X_W]);
 //当前角度获取
 LineFitResult calculate_angle_and_intercept(uint8_t img_in[MT9V03X_H][MT9V03X_W]);
+void parking_struct_init(void);
 float calculate_angle(uint8_t img_in[MT9V03X_H][MT9V03X_W]);
 float get_distance(uint8_t img_in[MT9V03X_H][MT9V03X_W]);
 float get_image_angle(uint8_t img_in[MT9V03X_H][MT9V03X_W]);

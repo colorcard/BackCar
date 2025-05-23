@@ -27,7 +27,6 @@ void Servo_Onto_Control(float current_onto){
     onto = -(int)(Servo_PID_Control(current_onto))+620;
     pwm_set_duty(pwm_servo,onto);
     ips200_show_float(0 * 16, MT9V03X_H + 16 * 11, onto-620, 3, 2);
-
 }
 
 
