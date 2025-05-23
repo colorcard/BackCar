@@ -3,38 +3,38 @@
 
 #include "zf_common_headfile.h"
 
-//================== ±àÂëÆ÷Òı½Å¶¨Òå ==================
-// ×ó±àÂëÆ÷ÅäÖÃ
-#define ENCODER_LEFT              (TIM2_ENCODER)                // ×ó±àÂëÆ÷¶¨Ê±Æ÷½Ó¿Ú
-#define ENCODER_LEFT_A            (TIM2_ENCODER_CH2_P33_6)      // ×ó±àÂëÆ÷AÏàÒı½Å
-#define ENCODER_LEFT_B            (TIM2_ENCODER_CH1_P33_7)      // ×ó±àÂëÆ÷BÏàÒı½Å
+//================== ç¼–ç å™¨å¼•è„šå®šä¹‰ ==================
+// å·¦ç¼–ç å™¨é…ç½®
+#define ENCODER_LEFT              (TIM2_ENCODER)                // å·¦ç¼–ç å™¨å®šæ—¶å™¨æ¥å£
+#define ENCODER_LEFT_A            (TIM2_ENCODER_CH2_P33_6)      // å·¦ç¼–ç å™¨Aç›¸å¼•è„š
+#define ENCODER_LEFT_B            (TIM2_ENCODER_CH1_P33_7)      // å·¦ç¼–ç å™¨Bç›¸å¼•è„š
 
-// ÓÒ±àÂëÆ÷ÅäÖÃ
-#define ENCODER_RIGHT             (TIM5_ENCODER)                // ÓÒ±àÂëÆ÷¶¨Ê±Æ÷½Ó¿Ú
-#define ENCODER_RIGHT_A           (TIM5_ENCODER_CH1_P10_3)      // ÓÒ±àÂëÆ÷AÏàÒı½Å
-#define ENCODER_RIGHT_B           (TIM5_ENCODER_CH2_P10_1)      // ÓÒ±àÂëÆ÷BÏàÒı½Å
+// å³ç¼–ç å™¨é…ç½®
+#define ENCODER_RIGHT             (TIM5_ENCODER)                // å³ç¼–ç å™¨å®šæ—¶å™¨æ¥å£
+#define ENCODER_RIGHT_A           (TIM5_ENCODER_CH1_P10_3)      // å³ç¼–ç å™¨Aç›¸å¼•è„š
+#define ENCODER_RIGHT_B           (TIM5_ENCODER_CH2_P10_1)      // å³ç¼–ç å™¨Bç›¸å¼•è„š
 
-//================== ±àÂëÆ÷²ÎÊıÅäÖÃ ==================
-#define ENCODER_SAMPLE_TIME       10                           // ±àÂëÆ÷²ÉÑùÖÜÆÚ(ms)
-#define ENCODER_PPR               1000                         // ±àÂëÆ÷Ã¿×ªÂö³åÊı
-#define ENCODER_GEAR_RATIO        30                           // ¼õËÙ±È
-#define ENCODER_WHEEL_DIAMETER    65                           // ³µÂÖÖ±¾¶(mm)
-#define ENCODER_RESOLUTION        (ENCODER_PPR * ENCODER_GEAR_RATIO * 4) // ±àÂëÆ÷·Ö±æÂÊ(ËÄ±¶Æµ)
+//================== ç¼–ç å™¨å‚æ•°é…ç½® ==================
+#define ENCODER_SAMPLE_TIME       10                           // ç¼–ç å™¨é‡‡æ ·å‘¨æœŸ(ms)
+#define ENCODER_PPR               1000                         // ç¼–ç å™¨æ¯è½¬è„‰å†²æ•°
+#define ENCODER_GEAR_RATIO        30                           // å‡é€Ÿæ¯”
+#define ENCODER_WHEEL_DIAMETER    65                           // è½¦è½®ç›´å¾„(mm)
+#define ENCODER_RESOLUTION        (ENCODER_PPR * ENCODER_GEAR_RATIO * 4) // ç¼–ç å™¨åˆ†è¾¨ç‡(å››å€é¢‘)
 
-//================== ÂË²¨²ÎÊı ==================
-#define ENCODER_FILTER_DEPTH      5                            // ÂË²¨Éî¶È
-#define ENCODER_MAX_SPEED         20000                        // ×î´óËÙ¶ÈÏŞÖÆ
-#define ENCODER_DEAD_ZONE         5                            // ËÀÇøãĞÖµ
+//================== æ»¤æ³¢å‚æ•° ==================
+#define ENCODER_FILTER_DEPTH      5                            // æ»¤æ³¢æ·±åº¦
+#define ENCODER_MAX_SPEED         20000                        // æœ€å¤§é€Ÿåº¦é™åˆ¶
+#define ENCODER_DEAD_ZONE         5                            // æ­»åŒºé˜ˆå€¼
 
-//================== È«¾Ö±äÁ¿ÉùÃ÷ ==================
-extern int16 encoder_speed_left;                              // ×ó±àÂëÆ÷ËÙ¶È
-extern int16 encoder_speed_right;                             // ÓÒ±àÂëÆ÷ËÙ¶È
-extern int16 encoder_speed_left_filtered;                     // ×ó±àÂëÆ÷ÂË²¨ºóËÙ¶È
-extern int16 encoder_speed_right_filtered;                    // ÓÒ±àÂëÆ÷ÂË²¨ºóËÙ¶È
-extern float encoder_distance_left;                           // ×óÂÖĞĞÊ»¾àÀë
-extern float encoder_distance_right;                          // ÓÒÂÖĞĞÊ»¾àÀë
+//================== å…¨å±€å˜é‡å£°æ˜ ==================
+extern int16 encoder_speed_left;                              // å·¦ç¼–ç å™¨é€Ÿåº¦
+extern int16 encoder_speed_right;                             // å³ç¼–ç å™¨é€Ÿåº¦
+extern int16 encoder_speed_left_filtered;                     // å·¦ç¼–ç å™¨æ»¤æ³¢åé€Ÿåº¦
+extern int16 encoder_speed_right_filtered;                    // å³ç¼–ç å™¨æ»¤æ³¢åé€Ÿåº¦
+extern float encoder_distance_left;                           // å·¦è½®è¡Œé©¶è·ç¦»
+extern float encoder_distance_right;                          // å³è½®è¡Œé©¶è·ç¦»
 
-//================== º¯ÊıÉùÃ÷ ==================
+//================== å‡½æ•°å£°æ˜ ==================
 void Encoder_Init(void);
 void Encoder_Read_Speed(void);
 void Encoder_Filter_Update(void);
@@ -46,7 +46,7 @@ float Encoder_Get_Right_Distance(void);
 float Encoder_Speed_To_MMS(int16 encoder_count);
 void Encoder_Debug_Display(void);
 
-// ¼æÈİÔ­ÓĞ½Ó¿Ú
+// å…¼å®¹åŸæœ‰æ¥å£
 #define encoder_filter()          Encoder_Read_Speed()
 #define encoder_init()            Encoder_Init()
 #define Encoder_speed_l           encoder_speed_left

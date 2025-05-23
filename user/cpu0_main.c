@@ -22,9 +22,9 @@ uint8 processed_image[MT9V03X_H][MT9V03X_W];         // 大津法处理后的图
 
 // 系统状态变量
 uint64 system_millis = 0;                            // 系统运行时间(ms)
-float distance_to_line = 0.0f;                       // 图像与赛道的距离
+//float distance_to_line = 0.0f;                       // 图像与赛道的距离
 float current_steering_angle = 0.0f;                 // 当前舵机输出角度
-float distance_to_side = 0.0f;                       // 侧向距离
+//float distance_to_side = 0.0f;                       // 侧向距离
 float angle_by_image = 0.0f;                         // 图像计算得到的角度
 
 // 停车系统
@@ -36,7 +36,6 @@ extern float Y_now_angle_to_path;                    // 陀螺仪角度（roll�
 extern float Z_now_angle_to_path;                    // 陀螺仪角度（yaw）
 
 //================== 函数声明区 ==================
-static void Hardware_Init(void);
 static void Parking_System_Init(void);
 static void Image_Process(void);
 static float Calculate_Steering_Angle(void);

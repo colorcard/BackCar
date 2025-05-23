@@ -4,11 +4,11 @@
 #include "zf_common_headfile.h"
 #include "pid.h"
 
-//================== ºê¶¨Òå ==================
-#define PWM_SERVO           (ATOM0_CH1_P33_9)    // ¶æ»úPWMÊä³öÒı½Å
-#define MID_VALUE           620                   // ¶æ»úÖĞÖµ£¨·¶Î§520~720£©
+//================== å®å®šä¹‰ ==================
+#define PWM_SERVO           (ATOM0_CH1_P33_9)    // èˆµæœºPWMè¾“å‡ºå¼•è„š
+#define MID_VALUE           620                   // èˆµæœºä¸­å€¼ï¼ˆèŒƒå›´520~720ï¼‰
 
-//================== º¯ÊıÉùÃ÷ ==================
+//================== å‡½æ•°å£°æ˜ ==================
 void Servo_Init(float Integrate_max,
                 float Integrate_min,
                 float Output_max,

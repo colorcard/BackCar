@@ -3,48 +3,48 @@
 
 #include "zf_common_headfile.h"
 
-//================== Í¼Ïñ²ÎÊı¶¨Òå ==================
+//================== å›¾åƒå‚æ•°å®šä¹‰ ==================
 #define IMAGE_WID      188
 #define IMAGE_HIGH     120
 
-// ²Ã¼ô×óÓÒ±ßÍ¼Ïñ£¬ÅÅ³ı±ßÔµºÚÈ¦¸ÉÈÅ
+// è£å‰ªå·¦å³è¾¹å›¾åƒï¼Œæ’é™¤è¾¹ç¼˜é»‘åœˆå¹²æ‰°
 #define LEFT_BOUNDARY  20
 #define RIGHT_BOUNDARY 168
 
-// ÏñËØÖµ¶¨Òå
-#define WHITE_PIXEL 255    // Í¼Ïñ°×
-#define BLACK_PIXEL 0      // Í¼ÏñºÚ
+// åƒç´ å€¼å®šä¹‰
+#define WHITE_PIXEL 255    // å›¾åƒç™½
+#define BLACK_PIXEL 0      // å›¾åƒé»‘
 
-//================== ½á¹¹Ìå¶¨Òå ==================
-// ÈüµÀ±ß½ç×´Ì¬½á¹¹Ìå
+//================== ç»“æ„ä½“å®šä¹‰ ==================
+// èµ›é“è¾¹ç•ŒçŠ¶æ€ç»“æ„ä½“
 typedef struct {
-    float slope;          // Ğ±ÂÊ (m)
-    float intercept;      // ½Ø¾à (b)
-    float angle;          // ½Ç¶È (¶È)
-    float level_distance; // Æ½¾ù¾àÀë
+    float slope;          // æ–œç‡ (m)
+    float intercept;      // æˆªè· (b)
+    float angle;          // è§’åº¦ (åº¦)
+    float level_distance; // å¹³å‡è·ç¦»
 } LineFitResult;
 
-//================== Íâ²¿±äÁ¿ÉùÃ÷ ==================
+//================== å¤–éƒ¨å˜é‡å£°æ˜ ==================
 extern Parking_struct parking;
 extern float distance_to_side;
 extern float angle_by_image;
 extern uint8 threshold_value;
 
-//================== º¯ÊıÉùÃ÷ ==================
-// Í¼Ïñ´¦Àíº¯Êı
+//================== å‡½æ•°å£°æ˜ ==================
+// å›¾åƒå¤„ç†å‡½æ•°
 void OtsuThreshold(uint8_t img_in[MT9V03X_H][MT9V03X_W], uint8_t img_out[MT9V03X_H][MT9V03X_W]);
 
-// ½Ç¶ÈºÍ¾àÀë¼ÆËãº¯Êı
+// è§’åº¦å’Œè·ç¦»è®¡ç®—å‡½æ•°
 LineFitResult calculate_angle_and_intercept(uint8_t img_in[MT9V03X_H][MT9V03X_W]);
 float get_distance(uint8_t img_in[MT9V03X_H][MT9V03X_W]);
 float get_image_angle(uint8_t img_in[MT9V03X_H][MT9V03X_W]);
 
-// Í£³µÏà¹Øº¯Êı
+// åœè½¦ç›¸å…³å‡½æ•°
 void parking_struct_init(void);
 uint8 parking_condition_scan(uint8_t img_in[MT9V03X_H][MT9V03X_W], uint8 start_line, uint8 range);
 uint8 grape_broom_monitor_parking(uint8_t img_in[MT9V03X_H][MT9V03X_W], uint8 start_line, uint8 range);
 
-// ÄÚ²¿¸¨Öúº¯Êı£¨Èç¹ûĞèÒªÔÚÆäËûÎÄ¼şÖĞÊ¹ÓÃ£©
+// å†…éƒ¨è¾…åŠ©å‡½æ•°ï¼ˆå¦‚æœéœ€è¦åœ¨å…¶ä»–æ–‡ä»¶ä¸­ä½¿ç”¨ï¼‰
 //static void display_calculation_results(const LineFitResult* result);
 //static void draw_parking_assist_lines(uint8 start_line, uint8 range);
 

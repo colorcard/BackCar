@@ -3,11 +3,11 @@
 
 
 typedef struct{
-        uint8 parking_flag;                     //¿ªÆôµ¹³µ±êÖ¾Î»
-        uint8 monitor_parking_opportunity;      //¼ì²âµ¹³µÊ±»ú±êÖ¾Î»
-        uint8 parking_station;                  //µ¹³µ½×¶Î±êÖ¾Î»
-        int16 car_length;                       //Ğ¡³µ³¤¶È
-        int8 init_flage;                        //½á¹¹Ìå³õÊ¼»¯±êÖ¾Î»£¬1´ú±íÒÑ¾­³õÊ¼»¯
+        uint8 parking_flag;                     //å¼€å¯å€’è½¦æ ‡å¿—ä½
+        uint8 monitor_parking_opportunity;      //æ£€æµ‹å€’è½¦æ—¶æœºæ ‡å¿—ä½
+        uint8 parking_station;                  //å€’è½¦é˜¶æ®µæ ‡å¿—ä½
+        int16 car_length;                       //å°è½¦é•¿åº¦
+        int8 init_flage;                        //ç»“æ„ä½“åˆå§‹åŒ–æ ‡å¿—ä½ï¼Œ1ä»£è¡¨å·²ç»åˆå§‹åŒ–
 }Parking_struct;
 
 
